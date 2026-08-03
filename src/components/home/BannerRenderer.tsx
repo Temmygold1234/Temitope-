@@ -23,7 +23,7 @@ export default function BannerRenderer({ position }: { position: 'top' | 'middle
         <section key={banner.id} className="w-full relative bg-gray-900 text-white overflow-hidden py-16 md:py-24">
           {banner.image && (
             <div className="absolute inset-0 z-0">
-              <img src={banner.image || 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&q=80'} alt={banner.heading} className="w-full h-full object-cover opacity-40" />
+              <img src={banner.image} alt={banner.heading} className="w-full h-full object-cover opacity-40" />
             </div>
           )}
           

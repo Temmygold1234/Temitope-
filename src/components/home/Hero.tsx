@@ -78,7 +78,7 @@ export default function Hero() {
           {/* Background Image */}
           <div className="absolute inset-0 w-full h-full">
              <img
-                src={slide.image || 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&q=80'}
+                src={slide.image}
                 alt={slide.title}
                 className="w-full h-full object-cover"
                 loading="lazy"

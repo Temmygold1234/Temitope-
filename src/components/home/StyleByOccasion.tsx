@@ -30,7 +30,7 @@ export default function StyleByOccasion() {
             >
               <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-500 z-10" />
               <img
-                src={occasion.image || 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80'}
+                src={occasion.image}
                 alt={occasion.name}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />

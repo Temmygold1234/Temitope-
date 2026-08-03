@@ -35,7 +35,7 @@ export default function AdminCategories() {
               <tr key={category.name}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="h-12 w-12 flex-shrink-0">
-                    <img className="h-12 w-12 rounded-md object-cover" src={category.image || 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80'} alt="" />
+                    <img className="h-12 w-12 rounded-md object-cover" src={category.image} alt="" />
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">

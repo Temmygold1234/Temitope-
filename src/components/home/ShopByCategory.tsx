@@ -21,7 +21,7 @@ export default function ShopByCategory() {
                 initial={{ scale: 1 }}
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.6 }}
-                src={category.image || 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80'}
+                src={category.image}
                 alt={category.name}
                 className="w-full h-full object-cover"
               />
