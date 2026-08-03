@@ -56,7 +56,7 @@ export default function ProductManager() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="h-10 w-10 flex-shrink-0">
-                        <img className="h-10 w-10 rounded-md object-cover" src={product.image} alt="" />
+                        <img className="h-10 w-10 rounded-md object-cover" src={product.image || 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80'} alt="" />
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">{product.name}</div>

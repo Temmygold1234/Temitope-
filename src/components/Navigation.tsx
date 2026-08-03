@@ -57,9 +57,6 @@ export default function Navigation() {
 
             {/* Icons */}
             <div className="flex items-center space-x-4 md:space-x-6">
-              <Link to="/admin" className="opacity-30 hover:opacity-100 transition-opacity" title="Admin">
-                <Settings size={14} strokeWidth={2} />
-              </Link>
               <button className="hover:text-brand-pink transition-colors">
                 <Search size={20} strokeWidth={1.5} />
               </button>

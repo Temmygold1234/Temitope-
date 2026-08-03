@@ -94,7 +94,7 @@ export default function Shop() {
             <div key={product.id} className="group">
               <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 mb-4 rounded-sm">
                 <img
-                  src={product.image}
+                  src={product.image || 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80'}
                   alt={product.name}
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
                 />
