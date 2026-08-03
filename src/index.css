@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-pink: #F8BBD0;
+  --color-brand-black: #111111;
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Manrope", sans-serif;
+  --font-ui: "Poppins", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply font-body text-brand-black bg-white antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
