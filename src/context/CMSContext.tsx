@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { PRODUCTS, CATEGORIES, Product } from '../data';
+import { api } from '../lib/api';
 
 interface CMSContextType {
   products: Product[];
@@ -84,19 +85,7 @@ export function CMSProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Load from backend
-    fetch('/api/products')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.length > 0) {
-          setProducts(data);
-        } else {
-          setProducts(PRODUCTS);
-        }
-      })
-      .catch(err => {
-        console.error("Failed to fetch products", err);
-        setProducts(PRODUCTS);
-      });
+    api.getProducts().then(data => setProducts(data));
 
     const storedCategories = localStorage.getItem('cms_categories');
     if (storedCategories) {
@@ -116,28 +105,22 @@ export function CMSProvider({ children }: { children: ReactNode }) {
   };
 
   const updateProduct = (updatedProduct: Product) => {
-    fetch(`/api/products/${updatedProduct.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updatedProduct)
-    }).then(res => res.json())
+    api.updateProduct(updatedProduct.id, updatedProduct)
       .then(data => {
         setProducts(products.map(p => p.id === data.id ? data : p));
       }).catch(err => console.error("Failed to update product", err));
   };
 
   const addProduct = (product: Product) => {
-    fetch('/api/products', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(product)
-    }).then(res => res.json())
-      .then(newProduct => setProducts([...products, newProduct]));
+    api.createProduct(product)
+      .then(newProduct => setProducts([...products, newProduct]))
+      .catch(err => console.error("Failed to add product", err));
   };
 
   const deleteProduct = (id: string) => {
-    fetch(`/api/products/${id}`, { method: 'DELETE' })
-      .then(() => setProducts(products.filter(p => p.id !== id)));
+    api.deleteProduct(id)
+      .then(() => setProducts(products.filter(p => p.id !== id)))
+      .catch(err => console.error("Failed to delete product", err));
   };
 
   const updateHomeSettings = (settings: any) => {

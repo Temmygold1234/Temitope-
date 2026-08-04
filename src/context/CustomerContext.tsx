@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { api } from '../lib/api';
 
 interface Customer {
   name: string;
@@ -39,8 +40,7 @@ export function CustomerProvider({ children }: { children: ReactNode }) {
 
   const fetchOrders = () => {
     if (customer?.email) {
-      fetch(`/api/orders?email=${encodeURIComponent(customer.email)}`)
-        .then(res => res.json())
+      api.getOrders(customer.email)
         .then(data => setOrders(data))
         .catch(err => console.error("Failed to fetch orders", err));
     }

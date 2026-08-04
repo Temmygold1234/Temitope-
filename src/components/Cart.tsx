@@ -1,5 +1,6 @@
 import { useCart } from '../context/CartContext';
 import { useCustomer } from '../context/CustomerContext';
+import { api } from '../lib/api';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -24,13 +25,7 @@ export default function Cart() {
           total: cartTotal
         };
 
-        const res = await fetch('/api/orders', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(orderData)
-        });
-
-        const newOrder = await res.json();
+        const newOrder = await api.createOrder(orderData);
         clearCart();
         fetchOrders();
         setIsCartOpen(false);

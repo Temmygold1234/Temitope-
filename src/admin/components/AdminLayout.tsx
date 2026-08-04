@@ -9,6 +9,7 @@ import {
 
 const MENU_ITEMS = [
   { name: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
+  { name: 'Orders', icon: ShoppingBag, path: '/admin/orders' },
   { name: 'Hero & Banners', icon: LayoutTemplate, path: '/admin/hero-banners' },
   { name: 'Home Page', icon: Globe, path: '/admin/home' },
   { name: 'Product Manager', icon: ShoppingBag, path: '/admin/products' },

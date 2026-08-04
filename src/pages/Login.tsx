@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useCart } from '../context/CartContext';
 import { useCustomer } from '../context/CustomerContext';
+import { api } from '../lib/api';
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
@@ -34,13 +35,7 @@ export default function Login() {
           total: cartTotal
         };
 
-        const res = await fetch('/api/orders', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(orderData)
-        });
-
-        const newOrder = await res.json();
+        const newOrder = await api.createOrder(orderData);
         clearCart();
         fetchOrders();
         navigate(`/account?orderSuccess=${newOrder.id}`);

@@ -13,6 +13,7 @@ import Account from './pages/Account';
 import AdminRoute from './admin/AdminRoute';
 import AdminLogin from './admin/pages/AdminLogin';
 import AdminDashboard from './admin/pages/AdminDashboard';
+import AdminOrders from './admin/pages/AdminOrders';
 import ProductManager from './admin/pages/ProductManager'; // Will create this next
 import HomeEditor from './admin/pages/HomeEditor'; // Will create this next
 import AdminHeroBanner from './admin/pages/AdminHeroBanner';
@@ -50,6 +51,7 @@ const router = createBrowserRouter([
     element: <AdminRoute />,
     children: [
       { index: true, element: <AdminDashboard /> },
+      { path: 'orders', element: <AdminOrders /> },
       { path: 'products', element: <ProductManager /> },
       { path: 'home', element: <HomeEditor /> },
       { path: 'hero-banners', element: <AdminHeroBanner /> },
