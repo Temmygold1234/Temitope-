@@ -9,6 +9,7 @@ import Shop from './pages/Shop';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
 import About from './pages/About';
+import Account from './pages/Account';
 import AdminRoute from './admin/AdminRoute';
 import AdminLogin from './admin/pages/AdminLogin';
 import AdminDashboard from './admin/pages/AdminDashboard';
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
       { path: 'faq', element: <Contact /> },
       { path: 'support', element: <Contact /> },
       { path: 'login', element: <Login /> },
+      { path: 'account', element: <Account /> },
     ],
   },
   {
@@ -67,12 +69,15 @@ const router = createBrowserRouter([
 
 import { CMSProvider } from './context/CMSContext';
 import { AuthProvider } from './context/AuthContext';
+import { CustomerProvider } from './context/CustomerContext';
 
 export default function App() {
   return (
     <CMSProvider>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <CustomerProvider>
+          <RouterProvider router={router} />
+        </CustomerProvider>
       </AuthProvider>
     </CMSProvider>
   );

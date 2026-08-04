@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, Heart, ShoppingBag, Menu, X, Settings } from 'lucide-react';
+import { Search, Heart, ShoppingBag, Menu, X, Settings, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useCart } from '../context/CartContext';
 
@@ -60,12 +60,12 @@ export default function Navigation() {
               <Link to="/admin" className="opacity-30 hover:opacity-100 transition-opacity" title="Admin">
                 <Settings size={14} strokeWidth={2} />
               </Link>
-              <button className="hover:text-brand-pink transition-colors">
+              <button className="hover:text-brand-pink transition-colors hidden sm:block">
                 <Search size={20} strokeWidth={1.5} />
               </button>
-              <button className="hover:text-brand-pink transition-colors">
-                <Heart size={20} strokeWidth={1.5} />
-              </button>
+              <Link to="/account" className="hover:text-brand-pink transition-colors">
+                <User size={20} strokeWidth={1.5} />
+              </Link>
               <button 
                 className="hover:text-brand-pink transition-colors relative"
                 onClick={() => setIsCartOpen(true)}

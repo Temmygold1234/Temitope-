@@ -88,6 +88,69 @@ async function startServer() {
     }
   });
 
+  let fallbackOrders: any[] = [];
+
+  app.get("/api/orders", async (req, res) => {
+    try {
+      const email = req.query.email;
+      const { data, error } = await supabase.from('orders').select('*');
+      if (error) throw error;
+      let orders = data || [];
+      if (email) {
+        orders = orders.filter((o: any) => o.customerEmail === email);
+      }
+      res.json(orders);
+    } catch (err: any) {
+      console.error('Error fetching orders, using fallback:', err.message);
+      let orders = fallbackOrders;
+      if (req.query.email) {
+        orders = orders.filter((o: any) => o.customerEmail === req.query.email);
+      }
+      res.json(orders);
+    }
+  });
+
+  app.post("/api/orders", async (req, res) => {
+    try {
+      const newOrder = {
+        ...req.body,
+        id: Math.random().toString(36).substr(2, 9),
+        createdAt: new Date().toISOString(),
+        status: 'pending' // pending, approved, rejected
+      };
+      
+      const { data, error } = await supabase.from('orders').insert([newOrder]).select().single();
+      if (error) throw error;
+      res.status(201).json(data);
+    } catch (err: any) {
+      console.error('Error creating order, using fallback:', err.message);
+      const newOrder = {
+        ...req.body,
+        id: Math.random().toString(36).substr(2, 9),
+        createdAt: new Date().toISOString(),
+        status: 'pending'
+      };
+      fallbackOrders.push(newOrder);
+      res.status(201).json(newOrder);
+    }
+  });
+
+  app.put("/api/orders/:id/status", async (req, res) => {
+    try {
+      const { status } = req.body;
+      const { data, error } = await supabase.from('orders').update({ status }).eq('id', req.params.id).select().single();
+      if (error) throw error;
+      res.json(data);
+    } catch (err: any) {
+      console.error('Error updating order status:', err.message);
+      const order = fallbackOrders.find(o => o.id === req.params.id);
+      if (order) {
+        order.status = req.body.status;
+      }
+      res.json(order || {});
+    }
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({

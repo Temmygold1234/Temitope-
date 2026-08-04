@@ -2,25 +2,54 @@ import { useState, FormEvent } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useCart } from '../context/CartContext';
+import { useCustomer } from '../context/CustomerContext';
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { cartItems, cartTotal, clearCart } = useCart();
+  const { loginCustomer, fetchOrders } = useCustomer();
   const redirect = searchParams.get('redirect');
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    const email = formData.get('email') as string;
+    const name = formData.get('name') as string || email.split('@')[0];
+
+    loginCustomer(name, email);
+
     if (redirect === 'checkout') {
-      const itemsText = cartItems.map(item => `${item.quantity}x ${item.product.name} ($${item.product.price})`).join('%0A');
-      const totalText = `Total: $${cartTotal.toFixed(2)}`;
-      const message = `Hello TemmyLuxury Ltd, I would like to place an order:%0A%0A${itemsText}%0A%0A${totalText}`;
-      window.open(`https://wa.me/2347077758928?text=${message}`, '_blank');
-      clearCart();
-      navigate('/');
+      try {
+        const orderData = {
+          customerName: name,
+          customerEmail: email,
+          items: cartItems.map(item => ({
+            productId: item.product.id,
+            name: item.product.name,
+            price: item.product.price,
+            quantity: item.quantity
+          })),
+          total: cartTotal
+        };
+
+        const res = await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        });
+
+        const newOrder = await res.json();
+        clearCart();
+        fetchOrders();
+        navigate(`/account?orderSuccess=${newOrder.id}`);
+      } catch (err) {
+        console.error("Order failed", err);
+        alert("Failed to place order. Please try again.");
+      }
     } else {
-      navigate('/');
+      navigate('/account');
     }
   };
 
@@ -47,12 +76,12 @@ export default function Login() {
             {!isLogin && (
               <div>
                 <label className="block text-xs font-ui uppercase tracking-widest text-gray-500 mb-2">Full Name</label>
-                <input type="text" required className="w-full bg-gray-50 border border-gray-200 px-4 py-3 text-sm font-body focus:outline-none focus:border-brand-pink transition-colors" />
+                <input type="text" name="name" required className="w-full bg-gray-50 border border-gray-200 px-4 py-3 text-sm font-body focus:outline-none focus:border-brand-pink transition-colors" />
               </div>
             )}
             <div>
               <label className="block text-xs font-ui uppercase tracking-widest text-gray-500 mb-2">Email Address</label>
-              <input type="email" required className="w-full bg-gray-50 border border-gray-200 px-4 py-3 text-sm font-body focus:outline-none focus:border-brand-pink transition-colors" />
+              <input type="email" name="email" required className="w-full bg-gray-50 border border-gray-200 px-4 py-3 text-sm font-body focus:outline-none focus:border-brand-pink transition-colors" />
             </div>
             <div>
               <label className="block text-xs font-ui uppercase tracking-widest text-gray-500 mb-2">Password</label>
@@ -69,6 +98,7 @@ export default function Login() {
           <div className="mt-8 text-center pt-6 border-t border-gray-100">
             <button 
               onClick={() => setIsLogin(!isLogin)}
+              type="button"
               className="text-xs font-ui uppercase tracking-widest text-gray-500 hover:text-brand-pink transition-colors"
             >
               {isLogin ? 'Need an account? Sign up' : 'Already have an account? Sign in'}

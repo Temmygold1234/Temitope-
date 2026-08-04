@@ -1,15 +1,48 @@
 import { useCart } from '../context/CartContext';
+import { useCustomer } from '../context/CustomerContext';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Cart() {
-  const { isCartOpen, setIsCartOpen, cartItems, removeFromCart, updateQuantity, cartTotal } = useCart();
+  const { isCartOpen, setIsCartOpen, cartItems, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
+  const { customer, fetchOrders } = useCustomer();
   const navigate = useNavigate();
 
-  const handleCheckout = () => {
-    setIsCartOpen(false);
-    navigate('/login?redirect=checkout');
+  const handleCheckout = async () => {
+    if (customer) {
+      try {
+        const orderData = {
+          customerName: customer.name,
+          customerEmail: customer.email,
+          items: cartItems.map(item => ({
+            productId: item.product.id,
+            name: item.product.name,
+            price: item.product.price,
+            quantity: item.quantity
+          })),
+          total: cartTotal
+        };
+
+        const res = await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        });
+
+        const newOrder = await res.json();
+        clearCart();
+        fetchOrders();
+        setIsCartOpen(false);
+        navigate(`/account?orderSuccess=${newOrder.id}`);
+      } catch (err) {
+        console.error("Order failed", err);
+        alert("Failed to place order. Please try again.");
+      }
+    } else {
+      setIsCartOpen(false);
+      navigate('/login?redirect=checkout');
+    }
   };
 
   return (

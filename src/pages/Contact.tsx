@@ -24,26 +24,34 @@ export default function Contact() {
             className="bg-gray-50 p-8 md:p-12 rounded-sm"
           >
             <h2 className="font-heading text-2xl mb-8 text-brand-black">Send us a message</h2>
-            <form className="space-y-6" onSubmit={e => e.preventDefault()}>
+            <form className="space-y-6" onSubmit={e => {
+              e.preventDefault();
+              const formData = new FormData(e.currentTarget);
+              const fname = formData.get('fname') || '';
+              const lname = formData.get('lname') || '';
+              const email = formData.get('email') || '';
+              const message = formData.get('message') || '';
+              window.location.href = `mailto:ridwanatolubodun02@gmail.com?subject=Inquiry from ${fname} ${lname}&body=${encodeURIComponent(message + '\n\nFrom: ' + email)}`;
+            }}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-xs font-ui uppercase tracking-widest text-gray-500 mb-2">First Name</label>
-                  <input type="text" className="w-full bg-white border border-gray-200 px-4 py-3 text-sm font-body focus:outline-none focus:border-brand-pink transition-colors" />
+                  <input type="text" name="fname" className="w-full bg-white border border-gray-200 px-4 py-3 text-sm font-body focus:outline-none focus:border-brand-pink transition-colors" />
                 </div>
                 <div>
                   <label className="block text-xs font-ui uppercase tracking-widest text-gray-500 mb-2">Last Name</label>
-                  <input type="text" className="w-full bg-white border border-gray-200 px-4 py-3 text-sm font-body focus:outline-none focus:border-brand-pink transition-colors" />
+                  <input type="text" name="lname" className="w-full bg-white border border-gray-200 px-4 py-3 text-sm font-body focus:outline-none focus:border-brand-pink transition-colors" />
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-ui uppercase tracking-widest text-gray-500 mb-2">Email Address *</label>
-                <input type="email" required className="w-full bg-white border border-gray-200 px-4 py-3 text-sm font-body focus:outline-none focus:border-brand-pink transition-colors" />
+                <input type="email" name="email" required className="w-full bg-white border border-gray-200 px-4 py-3 text-sm font-body focus:outline-none focus:border-brand-pink transition-colors" />
               </div>
               <div>
                 <label className="block text-xs font-ui uppercase tracking-widest text-gray-500 mb-2">Message *</label>
-                <textarea rows={5} required className="w-full bg-white border border-gray-200 px-4 py-3 text-sm font-body focus:outline-none focus:border-brand-pink transition-colors resize-none"></textarea>
+                <textarea name="message" rows={5} required className="w-full bg-white border border-gray-200 px-4 py-3 text-sm font-body focus:outline-none focus:border-brand-pink transition-colors resize-none"></textarea>
               </div>
-              <button className="w-full bg-brand-black text-white font-ui text-sm uppercase tracking-widest py-4 hover:bg-brand-pink transition-colors">
+              <button type="submit" className="w-full bg-brand-black text-white font-ui text-sm uppercase tracking-widest py-4 hover:bg-brand-pink transition-colors">
                 Send Message
               </button>
             </form>
