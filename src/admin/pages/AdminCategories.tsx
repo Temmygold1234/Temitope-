@@ -90,7 +90,7 @@ export default function AdminCategories() {
               <tr key={category.name}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="h-12 w-12 flex-shrink-0">
-                    <img className="h-12 w-12 rounded-md object-cover" src={category.image} alt={category.name} />
+                    <img className="h-12 w-12 rounded-md object-cover" src={category.image || undefined} alt={category.name} />
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -135,7 +135,7 @@ export default function AdminCategories() {
                 </div>
                 {formData.image && (
                   <div className="mt-2 h-32 w-full object-cover overflow-hidden rounded-md border border-gray-200">
-                    <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
+                    <img src={formData.image || undefined} alt="Preview" className="w-full h-full object-cover" />
                   </div>
                 )}
               </div>

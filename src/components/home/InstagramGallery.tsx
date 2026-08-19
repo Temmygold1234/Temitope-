@@ -17,7 +17,7 @@ export default function InstagramGallery() {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-1">
         {images.map((img: string, i: number) => (
           <a key={i} href="#" className="group relative aspect-square block overflow-hidden bg-gray-100">
-            <img src={img} alt="Instagram Post" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <img src={img || undefined} alt="Instagram Post" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-brand-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
               <Instagram size={32} />
             </div>

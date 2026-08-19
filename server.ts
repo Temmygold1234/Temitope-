@@ -16,7 +16,8 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  app.use(express.json());
+  app.use(express.json({ limit: '50mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
   // API Routes
   app.get("/api/health", (req, res) => {
@@ -148,6 +149,20 @@ async function startServer() {
         order.status = req.body.status;
       }
       res.json(order || {});
+    }
+  });
+
+  app.post("/api/cms/home", async (req, res) => {
+    try {
+      if (process.env.NODE_ENV !== "production") {
+        const fs = await import("fs");
+        const filePath = path.join(process.cwd(), "src", "cms_home.json");
+        await fs.promises.writeFile(filePath, JSON.stringify(req.body, null, 2));
+      }
+      res.json({ success: true });
+    } catch (err: any) {
+      console.error("Error saving CMS home data:", err.message);
+      res.status(500).json({ error: err.message });
     }
   });
 

@@ -10,7 +10,8 @@ export default function Hero() {
   
   // Filter enabled slides and check schedules
   const now = new Date();
-  const activeSlides = homeSettings.hero.slides.filter((slide: any) => {
+  const slides = homeSettings?.hero?.slides || [];
+  const activeSlides = slides.filter((slide: any) => {
     if (!slide.enabled) return false;
     if (slide.startDate && new Date(slide.startDate) > now) return false;
     if (slide.endDate && new Date(slide.endDate) < now) return false;
@@ -78,7 +79,7 @@ export default function Hero() {
           {/* Background Image */}
           <div className="absolute inset-0 w-full h-full">
              <img
-                src={slide.image}
+                src={slide.image || undefined}
                 alt={slide.title}
                 className="w-full h-full object-cover"
                 loading="lazy"

@@ -4,7 +4,7 @@ import { useCMS } from '../../context/CMSContext';
 export default function BannerRenderer({ position }: { position: 'top' | 'middle' | 'bottom' }) {
   const { homeSettings } = useCMS();
   
-  if (!homeSettings.banners) return null;
+  if (!homeSettings?.banners) return null;
 
   const now = new Date();
   const activeBanners = homeSettings.banners.filter((banner: any) => {
@@ -23,7 +23,7 @@ export default function BannerRenderer({ position }: { position: 'top' | 'middle
         <section key={banner.id} className="w-full relative bg-gray-900 text-white overflow-hidden py-16 md:py-24">
           {banner.image && (
             <div className="absolute inset-0 z-0">
-              <img src={banner.image} alt={banner.heading} className="w-full h-full object-cover opacity-40" />
+              <img src={banner.image || undefined} alt={banner.heading} className="w-full h-full object-cover opacity-40" />
             </div>
           )}
           

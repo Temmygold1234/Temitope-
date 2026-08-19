@@ -67,7 +67,7 @@ export default function AdminMedia() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {images.map((imgSrc, index) => (
             <div key={index} className="aspect-square bg-gray-100 rounded-md overflow-hidden relative group"> 
-               <img src={imgSrc} className="w-full h-full object-cover" alt={`Uploaded media ${index}`} />
+               <img src={imgSrc || undefined} className="w-full h-full object-cover" alt={`Uploaded media ${index}`} />
                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                  <button onClick={() => handleCopyUrl(imgSrc)} className="text-white text-sm bg-black/80 px-3 py-1 rounded">Copy URL</button>
                </div>

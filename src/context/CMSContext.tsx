@@ -2,6 +2,7 @@ import { safeJSONParse } from "../lib/json_safe";
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { PRODUCTS, CATEGORIES, Product } from '../data';
 import { api } from '../lib/api';
+import defaultHomeSettings from '../cms_home.json';
 
 interface CMSContextType {
   products: Product[];
@@ -16,77 +17,6 @@ interface CMSContextType {
   deleteCategory: (name: string) => void;
 }
 
-const defaultHomeSettings = {
-  hero: {
-    transitionEffect: "fade",
-    displayDuration: 6000,
-    slides: [
-      {
-        id: "slide-1",
-        image: "https://images.unsplash.com/photo-1549439602-43ebca2327af?w=1600&q=80",
-        title: "Luxury That Speaks Before You Do",
-        subtitle: "Discover timeless fashion pieces carefully selected to elevate your everyday style.",
-        description: "",
-        button1Text: "Shop Collection",
-        button1Link: "/shop",
-        button2Text: "New Arrivals",
-        button2Link: "/shop?new=true",
-        overlayOpacity: 40,
-        textAlign: "left",
-        enabled: true
-      },
-      {
-        id: "slide-2",
-        image: "https://images.unsplash.com/photo-1584916201218-f4242ceb4809?w=1600&q=80",
-        title: "Crafted for Elegance",
-        subtitle: "Exclusive handbags designed to make a statement wherever you go.",
-        description: "",
-        button1Text: "Shop Handbags",
-        button1Link: "/shop?category=handbags",
-        button2Text: "",
-        button2Link: "",
-        overlayOpacity: 30,
-        textAlign: "center",
-        enabled: true
-      },
-      {
-        id: "slide-3",
-        image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=1600&q=80",
-        title: "Timeless Precision",
-        subtitle: "Premium watches that blend sophisticated engineering with bold design.",
-        description: "",
-        button1Text: "Shop Watches",
-        button1Link: "/shop?category=watches",
-        button2Text: "",
-        button2Link: "",
-        overlayOpacity: 50,
-        textAlign: "right",
-        enabled: true
-      }
-    ]
-  },
-  banners: [
-    {
-      id: "banner-1",
-      type: "Flash Sale Banner",
-      image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&q=80",
-      heading: "Weekend Flash Sale",
-      description: "Up to 50% off selected items.",
-      buttonText: "Shop Sale",
-      buttonLink: "/shop?sale=true",
-      position: "middle",
-      enabled: false
-    }
-  ],
-  instagram: [
-    "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&q=80",
-    "https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=500&q=80",
-    "https://images.unsplash.com/photo-1618218168350-6e7c81151b64?w=500&q=80",
-    "https://images.unsplash.com/photo-1582588677317-046649f8546b?w=500&q=80",
-    "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=500&q=80"
-  ]
-};
-
 const CMSContext = createContext<CMSContextType | undefined>(undefined);
 
 export function CMSProvider({ children }: { children: ReactNode }) {
@@ -100,26 +30,28 @@ export function CMSProvider({ children }: { children: ReactNode }) {
 
     const storedCategories = localStorage.getItem('cms_categories');
     if (storedCategories) {
-      setCategories(safeJSONParse(storedCategories, null));
+      setCategories(safeJSONParse(storedCategories, CATEGORIES));
     } else {
       setCategories(CATEGORIES);
     }
 
     const storedHome = localStorage.getItem('cms_home');
     if (storedHome) {
-      const parsed = safeJSONParse(storedHome, {});
+      const parsed: any = safeJSONParse(storedHome, {});
       const mergedSettings = {
         ...defaultHomeSettings,
         ...parsed,
         hero: {
-          ...defaultHomeSettings.hero,
+          ...(defaultHomeSettings.hero || {}),
           ...(parsed.hero || {}),
-          slides: parsed.hero?.slides || defaultHomeSettings.hero.slides
+          slides: parsed.hero?.slides || defaultHomeSettings.hero?.slides || []
         },
-        banners: parsed.banners || defaultHomeSettings.banners,
-        instagram: parsed.instagram || defaultHomeSettings.instagram
+        banners: parsed.banners || defaultHomeSettings.banners || [],
+        instagram: parsed.instagram || defaultHomeSettings.instagram || {}
       };
       setHomeSettings(mergedSettings);
+    } else {
+      setHomeSettings(defaultHomeSettings);
     }
   }, []);
 
@@ -145,6 +77,15 @@ export function CMSProvider({ children }: { children: ReactNode }) {
   const updateHomeSettings = (settings: any) => {
     setHomeSettings(settings);
     localStorage.setItem('cms_home', JSON.stringify(settings));
+    
+    // Also save to backend file so it can be committed
+    fetch('/api/cms/home', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(settings)
+    }).catch(err => console.error('Failed to save CMS home to file:', err));
   };
 
   const addCategory = (category: any) => {

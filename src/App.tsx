@@ -79,13 +79,16 @@ const router = createBrowserRouter([
 import { CMSProvider } from './context/CMSContext';
 import { AuthProvider } from './context/AuthContext';
 import { CustomerProvider } from './context/CustomerContext';
+import { CartProvider } from './context/CartContext';
 
 export default function App() {
   return (
     <CMSProvider>
       <AuthProvider>
         <CustomerProvider>
-          <RouterProvider router={router} />
+          <CartProvider>
+            <RouterProvider router={router} />
+          </CartProvider>
         </CustomerProvider>
       </AuthProvider>
     </CMSProvider>

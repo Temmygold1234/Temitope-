@@ -115,7 +115,7 @@ export default function HomeEditor() {
                   />
                   {slide.image && (
                     <div className="mt-2 h-32 w-full object-cover overflow-hidden rounded-md border border-gray-200">
-                      <img src={slide.image} alt={`Slide ${index + 1}`} className="w-full h-full object-cover" />
+                      <img src={slide.image || undefined} alt={`Slide ${index + 1}`} className="w-full h-full object-cover" />
                     </div>
                   )}
                 </div>
@@ -166,7 +166,7 @@ export default function HomeEditor() {
                   </button>
                 </div>
                 {imgUrl && (
-                  <img src={imgUrl} alt="Preview" className="w-10 h-10 object-cover rounded-md flex-shrink-0 border border-gray-200" />
+                  <img src={imgUrl || undefined} alt="Preview" className="w-10 h-10 object-cover rounded-md flex-shrink-0 border border-gray-200" />
                 )}
               </div>
             ))}

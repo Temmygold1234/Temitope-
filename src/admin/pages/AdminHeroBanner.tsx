@@ -280,7 +280,7 @@ export default function AdminHeroBanner() {
                             />
                             {slide.image && (
                               <div className="mt-2 relative w-full h-32 rounded bg-gray-100 overflow-hidden">
-                                <img src={slide.image} alt={slide.title} className="w-full h-full object-cover" />
+                                <img src={slide.image || undefined} alt={slide.title} className="w-full h-full object-cover" />
                               </div>
                             )}
                           </div>
@@ -481,7 +481,7 @@ export default function AdminHeroBanner() {
                             />
                             {banner.image && (
                               <div className="mt-2 h-24 w-full rounded bg-gray-100 overflow-hidden">
-                                <img src={banner.image} alt="Banner Preview" className="w-full h-full object-cover" />
+                                <img src={banner.image || undefined} alt="Banner Preview" className="w-full h-full object-cover" />
                               </div>
                             )}
                           </div>
@@ -611,7 +611,7 @@ export default function AdminHeroBanner() {
 
                          return (
                            <div className="absolute inset-0 w-full h-full">
-                             <img src={activeSlide.image} className="w-full h-full object-cover" />
+                             <img src={activeSlide.image || undefined} className="w-full h-full object-cover" />
                              <div className="absolute inset-0 bg-black" style={{ opacity: (activeSlide.overlayOpacity ?? 40) / 100 }} />
                              
                              <div className="absolute inset-0 flex flex-col justify-center max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 z-20">
@@ -644,7 +644,7 @@ export default function AdminHeroBanner() {
                            <section key={banner.id} className="w-full relative bg-gray-900 text-white overflow-hidden py-16">
                             {banner.image && (
                               <div className="absolute inset-0 z-0">
-                                <img src={banner.image} className="w-full h-full object-cover opacity-40" />
+                                <img src={banner.image || undefined} className="w-full h-full object-cover opacity-40" />
                               </div>
                             )}
                             <div className="relative z-10 max-w-7xl mx-auto px-6 flex flex-col items-center text-center">

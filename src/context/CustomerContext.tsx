@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { api } from '../lib/api';
+import { safeJSONParse } from '../lib/json_safe';
 
 interface Customer {
   name: string;
@@ -33,7 +34,7 @@ export function CustomerProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const savedCustomer = localStorage.getItem('customer_auth');
     if (savedCustomer) {
-      const parsed = JSON.parse(savedCustomer);
+      const parsed = safeJSONParse(savedCustomer, null);
       setCustomer(parsed);
     }
   }, []);

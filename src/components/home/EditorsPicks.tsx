@@ -31,7 +31,7 @@ export default function EditorsPicks() {
             <Link to={`/shop?product=${pick.id}`} className="group block mb-12">
               <div className="aspect-[4/5] overflow-hidden mb-6 rounded-sm relative">
                 <img 
-                  src={pick.image} 
+                  src={pick.image || undefined} 
                   alt={pick.name} 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                 />
@@ -50,7 +50,7 @@ export default function EditorsPicks() {
                 <div key={item.id} className="flex gap-6 items-center group">
                   <div className="w-24 h-32 overflow-hidden rounded-sm shrink-0">
                     <img 
-                      src={item.image} 
+                      src={item.image || undefined} 
                       alt={item.name} 
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
                     />

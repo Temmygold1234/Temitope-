@@ -94,7 +94,7 @@ export default function Cart() {
                   <div key={item.product.id} className="flex gap-4 border-b border-gray-100 pb-6 last:border-0">
                     <div className="w-24 h-24 bg-gray-100 rounded-sm overflow-hidden shrink-0">
                       <img
-                        src={item.product.image}
+                        src={item.product.image || undefined}
                         alt={item.product.name}
                         className="w-full h-full object-cover"
                       />

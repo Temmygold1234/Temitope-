@@ -126,7 +126,7 @@ export default function ProductManager() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="h-10 w-10 flex-shrink-0">
-                        <img className="h-10 w-10 rounded-md object-cover" src={product.image} alt="" />
+                        <img className="h-10 w-10 rounded-md object-cover" src={product.image || undefined} alt="" />
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">{product.name}</div>
@@ -214,7 +214,7 @@ export default function ProductManager() {
                 </div>
                 {formData.image && (
                   <div className="mt-2 h-20 w-20 object-cover overflow-hidden rounded-md border border-gray-200">
-                    <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
+                    <img src={formData.image || undefined} alt="Preview" className="w-full h-full object-cover" />
                   </div>
                 )}
               </div>
