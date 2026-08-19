@@ -10,6 +10,9 @@ interface CMSContextType {
   addProduct: (product: Product) => void;
   deleteProduct: (id: string) => void;
   updateHomeSettings: (settings: any) => void;
+  addCategory: (category: any) => void;
+  updateCategory: (oldName: string, newCategory: any) => void;
+  deleteCategory: (name: string) => void;
 }
 
 const defaultHomeSettings = {
@@ -73,6 +76,13 @@ const defaultHomeSettings = {
       position: "middle",
       enabled: false
     }
+  ],
+  instagram: [
+    "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&q=80",
+    "https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=500&q=80",
+    "https://images.unsplash.com/photo-1618218168350-6e7c81151b64?w=500&q=80",
+    "https://images.unsplash.com/photo-1582588677317-046649f8546b?w=500&q=80",
+    "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=500&q=80"
   ]
 };
 
@@ -96,13 +106,11 @@ export function CMSProvider({ children }: { children: ReactNode }) {
 
     const storedHome = localStorage.getItem('cms_home');
     if (storedHome) {
-      setHomeSettings(JSON.parse(storedHome));
+      const parsed = JSON.parse(storedHome);
+      // Merge with default to ensure instagram exists if it was saved before instagram was added
+      setHomeSettings({ ...defaultHomeSettings, ...parsed, instagram: parsed.instagram || defaultHomeSettings.instagram });
     }
   }, []);
-
-  const saveProducts = (newProducts: Product[]) => {
-    setProducts(newProducts);
-  };
 
   const updateProduct = (updatedProduct: Product) => {
     api.updateProduct(updatedProduct.id, updatedProduct)
@@ -128,6 +136,24 @@ export function CMSProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('cms_home', JSON.stringify(settings));
   };
 
+  const addCategory = (category: any) => {
+    const newCategories = [...categories, category];
+    setCategories(newCategories);
+    localStorage.setItem('cms_categories', JSON.stringify(newCategories));
+  };
+
+  const updateCategory = (oldName: string, newCategory: any) => {
+    const newCategories = categories.map(c => c.name === oldName ? newCategory : c);
+    setCategories(newCategories);
+    localStorage.setItem('cms_categories', JSON.stringify(newCategories));
+  };
+
+  const deleteCategory = (name: string) => {
+    const newCategories = categories.filter(c => c.name !== name);
+    setCategories(newCategories);
+    localStorage.setItem('cms_categories', JSON.stringify(newCategories));
+  };
+
   return (
     <CMSContext.Provider value={{
       products,
@@ -136,7 +162,10 @@ export function CMSProvider({ children }: { children: ReactNode }) {
       updateProduct,
       addProduct,
       deleteProduct,
-      updateHomeSettings
+      updateHomeSettings,
+      addCategory,
+      updateCategory,
+      deleteCategory
     }}>
       {children}
     </CMSContext.Provider>

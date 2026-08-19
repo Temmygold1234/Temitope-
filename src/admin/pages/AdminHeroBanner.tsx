@@ -210,8 +210,8 @@ export default function AdminHeroBanner() {
                     <label className="block text-xs font-medium text-gray-700 mb-1">Display Duration (ms)</label>
                     <input
                       type="number"
-                      value={formData.hero.displayDuration || 6000}
-                      onChange={(e) => setFormData({ ...formData, hero: { ...formData.hero, displayDuration: parseInt(e.target.value) } })}
+                      value={formData.hero.displayDuration === undefined || Number.isNaN(formData.hero.displayDuration) ? '' : formData.hero.displayDuration}
+                      onChange={(e) => setFormData({ ...formData, hero: { ...formData.hero, displayDuration: e.target.value ? parseInt(e.target.value) : 6000 } })}
                       className="border border-gray-300 rounded-md px-3 py-1.5 text-sm w-32"
                     />
                   </div>
@@ -361,8 +361,8 @@ export default function AdminHeroBanner() {
                                 type="number"
                                 min="0"
                                 max="100"
-                                value={slide.overlayOpacity ?? 40}
-                                onChange={(e) => handleSlideChange(slide.id, 'overlayOpacity', parseInt(e.target.value))}
+                                value={slide.overlayOpacity === undefined || Number.isNaN(slide.overlayOpacity) ? '' : slide.overlayOpacity}
+                                onChange={(e) => handleSlideChange(slide.id, 'overlayOpacity', e.target.value ? parseInt(e.target.value) : 0)}
                                 className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                               />
                             </div>

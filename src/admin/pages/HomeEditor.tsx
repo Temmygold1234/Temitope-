@@ -1,10 +1,11 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import { useCMS } from '../../context/CMSContext';
-import { Save } from 'lucide-react';
+import { Save, Check, Upload } from 'lucide-react';
 
 export default function HomeEditor() {
   const { homeSettings, updateHomeSettings } = useCMS();
   const [formData, setFormData] = useState(homeSettings);
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     setFormData(homeSettings);
@@ -20,13 +21,40 @@ export default function HomeEditor() {
     }
   };
 
+  const handleImageUpload = (index: number) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          if (event.target?.result) {
+            const newInsta = [...(formData.instagram || [])];
+            newInsta[index] = event.target!.result as string;
+            setFormData({ ...formData, instagram: newInsta });
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    input.click();
+  };
+
   const handleSave = () => {
     updateHomeSettings(formData);
-    alert('Home settings saved successfully!');
+    setSaved(true);
+    setTimeout(() => setSaved(false), 3000);
   };
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 max-w-4xl relative">
+      {saved && (
+        <div className="fixed top-4 right-4 bg-black text-white px-4 py-2 rounded shadow-lg z-50 flex items-center gap-2">
+          <Check size={16} /> Home settings saved successfully!
+        </div>
+      )}
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Home Page Editor</h1>
@@ -115,6 +143,36 @@ export default function HomeEditor() {
             ))}
           </div>
         </div>
+
+        <div>
+          <h2 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">Instagram Feed URLs</h2>
+          <div className="space-y-4">
+            {(formData.instagram || []).map((imgUrl: string, index: number) => (
+              <div key={index} className="flex gap-4 items-center">
+                <div className="flex-grow flex gap-2">
+                  <input
+                    type="text"
+                    value={imgUrl}
+                    onChange={(e) => {
+                      const newInsta = [...(formData.instagram || [])];
+                      newInsta[index] = e.target.value;
+                      setFormData({ ...formData, instagram: newInsta });
+                    }}
+                    className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-black focus:border-black"
+                    placeholder="https://..."
+                  />
+                  <button type="button" onClick={() => handleImageUpload(index)} className="bg-gray-100 border border-gray-300 rounded-md px-3 hover:bg-gray-200 flex items-center justify-center flex-shrink-0" title="Upload Image">
+                    <Upload size={18} />
+                  </button>
+                </div>
+                {imgUrl && (
+                  <img src={imgUrl} alt="Preview" className="w-10 h-10 object-cover rounded-md flex-shrink-0 border border-gray-200" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
   );

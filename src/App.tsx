@@ -10,6 +10,8 @@ import Contact from './pages/Contact';
 import Login from './pages/Login';
 import About from './pages/About';
 import Account from './pages/Account';
+import CustomerRoute from './components/CustomerRoute';
+
 import AdminRoute from './admin/AdminRoute';
 import AdminLogin from './admin/pages/AdminLogin';
 import AdminDashboard from './admin/pages/AdminDashboard';
@@ -31,15 +33,20 @@ const router = createBrowserRouter([
     path: '/',
     element: <Layout />,
     children: [
-      { index: true, element: <Home /> },
-      { path: 'shop', element: <Shop /> },
-      { path: 'collections', element: <Shop /> },
-      { path: 'about', element: <About /> },
-      { path: 'contact', element: <Contact /> },
-      { path: 'faq', element: <Contact /> },
-      { path: 'support', element: <Contact /> },
       { path: 'login', element: <Login /> },
-      { path: 'account', element: <Account /> },
+      {
+        element: <CustomerRoute />,
+        children: [
+          { index: true, element: <Home /> },
+          { path: 'shop', element: <Shop /> },
+          { path: 'collections', element: <Shop /> },
+          { path: 'about', element: <About /> },
+          { path: 'contact', element: <Contact /> },
+          { path: 'faq', element: <Contact /> },
+          { path: 'support', element: <Contact /> },
+          { path: 'account', element: <Account /> },
+        ],
+      },
     ],
   },
   {

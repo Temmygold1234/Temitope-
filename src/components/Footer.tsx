@@ -1,7 +1,20 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Instagram, Facebook, Twitter } from 'lucide-react';
 
 export default function Footer() {
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      setSubscribed(true);
+      setEmail('');
+      setTimeout(() => setSubscribed(false), 3000);
+    }
+  };
+
   return (
     <footer className="bg-brand-black text-white pt-20 pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -54,19 +67,28 @@ export default function Footer() {
             <p className="text-gray-400 font-body text-[13px] mb-6">
               Subscribe for exclusive offers and new arrivals.
             </p>
-            <form className="flex" onSubmit={(e) => e.preventDefault()}>
-              <input
-                type="email"
-                placeholder="EMAIL ADDRESS"
-                className="bg-transparent border-b border-gray-600 px-0 py-2 w-full text-[11px] tracking-widest focus:outline-none focus:border-brand-pink transition-colors text-white font-ui uppercase"
-              />
-              <button
-                type="submit"
-                className="font-ui text-[11px] uppercase tracking-[0.2em] hover:text-brand-pink transition-colors ml-4 whitespace-nowrap"
-              >
-                Subscribe
-              </button>
-            </form>
+            {subscribed ? (
+              <p className="text-brand-pink font-ui text-[11px] uppercase tracking-widest">
+                Thank you for subscribing!
+              </p>
+            ) : (
+              <form className="flex" onSubmit={handleSubscribe}>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="EMAIL ADDRESS"
+                  required
+                  className="bg-transparent border-b border-gray-600 px-0 py-2 w-full text-[11px] tracking-widest focus:outline-none focus:border-brand-pink transition-colors text-white font-ui uppercase"
+                />
+                <button
+                  type="submit"
+                  className="font-ui text-[11px] uppercase tracking-[0.2em] hover:text-brand-pink transition-colors ml-4 whitespace-nowrap"
+                >
+                  Subscribe
+                </button>
+              </form>
+            )}
           </div>
         </div>
 
