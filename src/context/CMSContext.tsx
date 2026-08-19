@@ -1,3 +1,4 @@
+import { safeJSONParse } from "../lib/json_safe";
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { PRODUCTS, CATEGORIES, Product } from '../data';
 import { api } from '../lib/api';
@@ -99,16 +100,26 @@ export function CMSProvider({ children }: { children: ReactNode }) {
 
     const storedCategories = localStorage.getItem('cms_categories');
     if (storedCategories) {
-      setCategories(JSON.parse(storedCategories));
+      setCategories(safeJSONParse(storedCategories, null));
     } else {
       setCategories(CATEGORIES);
     }
 
     const storedHome = localStorage.getItem('cms_home');
     if (storedHome) {
-      const parsed = JSON.parse(storedHome);
-      // Merge with default to ensure instagram exists if it was saved before instagram was added
-      setHomeSettings({ ...defaultHomeSettings, ...parsed, instagram: parsed.instagram || defaultHomeSettings.instagram });
+      const parsed = safeJSONParse(storedHome, {});
+      const mergedSettings = {
+        ...defaultHomeSettings,
+        ...parsed,
+        hero: {
+          ...defaultHomeSettings.hero,
+          ...(parsed.hero || {}),
+          slides: parsed.hero?.slides || defaultHomeSettings.hero.slides
+        },
+        banners: parsed.banners || defaultHomeSettings.banners,
+        instagram: parsed.instagram || defaultHomeSettings.instagram
+      };
+      setHomeSettings(mergedSettings);
     }
   }, []);
 

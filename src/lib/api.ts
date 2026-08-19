@@ -1,3 +1,4 @@
+import { safeJSONParse } from "./json_safe";
 import { supabase } from './supabase';
 import { PRODUCTS } from '../data';
 
@@ -58,7 +59,7 @@ export const api = {
     } catch (err) {
       // Fallback to local storage if Supabase fails
       const stored = localStorage.getItem('fallback_orders');
-      let orders = stored ? JSON.parse(stored) : [];
+      let orders = stored ? safeJSONParse(stored, []) : [];
       if (email) {
         orders = orders.filter((o: any) => o.customerEmail === email);
       }
@@ -85,7 +86,7 @@ export const api = {
         status: 'pending'
       };
       const stored = localStorage.getItem('fallback_orders');
-      let orders = stored ? JSON.parse(stored) : [];
+      let orders = stored ? safeJSONParse(stored, []) : [];
       orders.push(newOrder);
       localStorage.setItem('fallback_orders', JSON.stringify(orders));
       return newOrder;
@@ -100,7 +101,7 @@ export const api = {
     } catch (err) {
       const stored = localStorage.getItem('fallback_orders');
       if (stored) {
-        let orders = JSON.parse(stored);
+        let orders = safeJSONParse(stored, []);
         const index = orders.findIndex((o: any) => o.id === id);
         if (index > -1) {
           orders[index].status = status;

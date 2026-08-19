@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useCMS } from '../../context/CMSContext';
 import { Plus, Edit, Trash2, X, Upload } from 'lucide-react';
 
