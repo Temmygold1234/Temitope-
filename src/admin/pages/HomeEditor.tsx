@@ -31,9 +31,12 @@ export default function HomeEditor() {
         const reader = new FileReader();
         reader.onload = (event) => {
           if (event.target?.result) {
-            const instaObj = formData.instagram; const instaArr = Array.isArray(instaObj) ? instaObj : (instaObj?.posts || []); const newInsta = [...instaArr];
+            const instaObj = formData.instagram; 
+            const instaArr = Array.isArray(instaObj) ? instaObj : (instaObj?.posts || []); 
+            const handle = Array.isArray(instaObj) ? '@temmyluxury' : (instaObj?.handle || '@temmyluxury');
+            const newInsta = [...instaArr];
             newInsta[index] = event.target!.result as string;
-            setFormData({ ...formData, instagram: newInsta });
+            setFormData({ ...formData, instagram: { handle, posts: newInsta } });
           }
         };
         reader.readAsDataURL(file);
@@ -145,7 +148,22 @@ export default function HomeEditor() {
         </div>
 
         <div>
-          <h2 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">Instagram Feed URLs</h2>
+          <div className="flex justify-between items-center mb-4 pb-2 border-b">
+            <h2 className="text-lg font-medium text-gray-900">Instagram Feed URLs</h2>
+            <button 
+              type="button" 
+              onClick={() => {
+                const instaObj = formData.instagram; 
+                const instaArr = Array.isArray(instaObj) ? instaObj : (instaObj?.posts || []); 
+                const newInsta = [...instaArr, ''];
+                const handle = Array.isArray(instaObj) ? '@temmyluxury' : (instaObj?.handle || '@temmyluxury');
+                setFormData({ ...formData, instagram: { handle, posts: newInsta } });
+              }}
+              className="text-sm bg-gray-100 hover:bg-gray-200 text-black px-3 py-1 rounded border border-gray-300 transition-colors"
+            >
+              + Add Post
+            </button>
+          </div>
           <div className="space-y-4">
             {(Array.isArray(formData.instagram) ? formData.instagram : (formData.instagram?.posts || [])).map((imgUrl: string, index: number) => (
               <div key={index} className="flex gap-4 items-center">
@@ -154,15 +172,32 @@ export default function HomeEditor() {
                     type="text"
                     value={imgUrl}
                     onChange={(e) => {
-                      const instaObj = formData.instagram; const instaArr = Array.isArray(instaObj) ? instaObj : (instaObj?.posts || []); const newInsta = [...instaArr];
+                      const instaObj = formData.instagram; 
+                      const instaArr = Array.isArray(instaObj) ? instaObj : (instaObj?.posts || []); 
+                      const handle = Array.isArray(instaObj) ? '@temmyluxury' : (instaObj?.handle || '@temmyluxury');
+                      const newInsta = [...instaArr];
                       newInsta[index] = e.target.value;
-                      setFormData({ ...formData, instagram: newInsta });
+                      setFormData({ ...formData, instagram: { handle, posts: newInsta } });
                     }}
                     className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-black focus:border-black"
                     placeholder="https://..."
                   />
                   <button type="button" onClick={() => handleImageUpload(index)} className="bg-gray-100 border border-gray-300 rounded-md px-3 hover:bg-gray-200 flex items-center justify-center flex-shrink-0" title="Upload Image">
                     <Upload size={18} />
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      const instaObj = formData.instagram; 
+                      const instaArr = Array.isArray(instaObj) ? instaObj : (instaObj?.posts || []); 
+                      const handle = Array.isArray(instaObj) ? '@temmyluxury' : (instaObj?.handle || '@temmyluxury');
+                      const newInsta = instaArr.filter((_: any, i: number) => i !== index);
+                      setFormData({ ...formData, instagram: { handle, posts: newInsta } });
+                    }} 
+                    className="bg-red-50 text-red-600 border border-red-200 rounded-md px-3 hover:bg-red-100 flex items-center justify-center flex-shrink-0" 
+                    title="Remove Image"
+                  >
+                    X
                   </button>
                 </div>
                 {imgUrl && (
