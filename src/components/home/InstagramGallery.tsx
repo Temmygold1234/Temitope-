@@ -3,7 +3,10 @@ import { useCMS } from '../../context/CMSContext';
 
 export default function InstagramGallery() {
   const { homeSettings } = useCMS();
-  const images = homeSettings?.instagram || [];
+  const instaObj = homeSettings?.instagram;
+  const images = Array.isArray(instaObj) ? instaObj : (instaObj?.posts || []);
+
+  if (!images || images.length === 0) return null;
 
   return (
     <section className="py-24 bg-white">

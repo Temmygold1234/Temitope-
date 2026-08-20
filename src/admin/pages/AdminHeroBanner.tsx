@@ -52,7 +52,7 @@ export default function AdminHeroBanner() {
 
   // --- Slides Management ---
   const handleSlideChange = (id: string, field: keyof Slide, value: any) => {
-    const updatedSlides = formData.hero.slides.map((slide: Slide) => 
+    const updatedSlides = (formData.hero?.slides || []).map((slide: Slide) => 
       slide.id === id ? { ...slide, [field]: value } : slide
     );
     setFormData({ ...formData, hero: { ...formData.hero, slides: updatedSlides } });
@@ -81,7 +81,7 @@ export default function AdminHeroBanner() {
     if (window.confirm('Are you sure you want to delete this slide?')) {
       setFormData({ 
         ...formData, 
-        hero: { ...formData.hero, slides: formData.hero.slides.filter((s: Slide) => s.id !== id) } 
+        hero: { ...formData.hero, slides: (formData.hero?.slides || []).filter((s: Slide) => s.id !== id) } 
       });
     }
   };
@@ -110,7 +110,7 @@ export default function AdminHeroBanner() {
 
   // --- Banners Management ---
   const handleBannerChange = (id: string, field: keyof Banner, value: any) => {
-    const updatedBanners = formData.banners.map((banner: Banner) => 
+    const updatedBanners = (formData.banners || []).map((banner: Banner) => 
       banner.id === id ? { ...banner, [field]: value } : banner
     );
     setFormData({ ...formData, banners: updatedBanners });
@@ -137,7 +137,7 @@ export default function AdminHeroBanner() {
     if (window.confirm('Are you sure you want to delete this banner?')) {
       setFormData({ 
         ...formData, 
-        banners: formData.banners.filter((b: Banner) => b.id !== id)
+        banners: (formData.banners || []).filter((b: Banner) => b.id !== id)
       });
     }
   };
@@ -226,7 +226,7 @@ export default function AdminHeroBanner() {
               </div>
 
               <div className="space-y-4">
-                {formData.hero.slides.map((slide: Slide, index: number) => (
+                {(formData.hero?.slides || []).map((slide: Slide, index: number) => (
                   <div 
                     key={slide.id} 
                     draggable
@@ -422,7 +422,7 @@ export default function AdminHeroBanner() {
               </div>
 
               <div className="space-y-4">
-                {formData.banners?.map((banner: Banner, index: number) => (
+                {(formData.banners || []).map((banner: Banner, index: number) => (
                   <div key={banner.id} className="border border-gray-200 rounded-lg bg-white overflow-hidden">
                     <div className="flex items-center justify-between p-4 bg-gray-50 border-b border-gray-200">
                       <div className="flex items-center gap-3">
@@ -598,7 +598,7 @@ export default function AdminHeroBanner() {
                       {/* Simple static preview of the first active slide */}
                       {(() => {
                          const now = new Date();
-                         const activeSlide = formData.hero.slides.find((s: Slide) => 
+                         const activeSlide = (formData.hero?.slides || []).find((s: Slide) => 
                            s.enabled && (!s.startDate || new Date(s.startDate) <= now) && (!s.endDate || new Date(s.endDate) >= now)
                          );
                          
@@ -636,11 +636,11 @@ export default function AdminHeroBanner() {
                       
                       {['top', 'middle', 'bottom'].map((pos) => {
                         const now = new Date();
-                        const activeBanners = formData.banners.filter((b: Banner) => 
+                        const activeBanners = (formData.banners || []).filter((b: Banner) => 
                           b.enabled && b.position === pos && (!b.startDate || new Date(b.startDate) <= now) && (!b.endDate || new Date(b.endDate) >= now)
                         );
                         
-                        return activeBanners.map((banner: Banner) => (
+                        return (activeBanners || []).map((banner: Banner) => (
                            <section key={banner.id} className="w-full relative bg-gray-900 text-white overflow-hidden py-16">
                             {banner.image && (
                               <div className="absolute inset-0 z-0">

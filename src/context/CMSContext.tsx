@@ -44,9 +44,9 @@ export function CMSProvider({ children }: { children: ReactNode }) {
         hero: {
           ...(defaultHomeSettings.hero || {}),
           ...(parsed.hero || {}),
-          slides: parsed.hero?.slides || defaultHomeSettings.hero?.slides || []
+          slides: Array.isArray(parsed.hero?.slides) ? parsed.hero.slides : (Array.isArray(defaultHomeSettings.hero?.slides) ? defaultHomeSettings.hero.slides : [])
         },
-        banners: parsed.banners || defaultHomeSettings.banners || [],
+        banners: Array.isArray(parsed.banners) ? parsed.banners : (Array.isArray(defaultHomeSettings.banners) ? defaultHomeSettings.banners : []),
         instagram: parsed.instagram || defaultHomeSettings.instagram || {}
       };
       setHomeSettings(mergedSettings);

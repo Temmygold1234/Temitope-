@@ -31,7 +31,7 @@ export default function HomeEditor() {
         const reader = new FileReader();
         reader.onload = (event) => {
           if (event.target?.result) {
-            const newInsta = [...(formData.instagram || [])];
+            const instaObj = formData.instagram; const instaArr = Array.isArray(instaObj) ? instaObj : (instaObj?.posts || []); const newInsta = [...instaArr];
             newInsta[index] = event.target!.result as string;
             setFormData({ ...formData, instagram: newInsta });
           }
@@ -99,7 +99,7 @@ export default function HomeEditor() {
           <h2 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">Hero Slides</h2>
           
           <div className="space-y-8">
-            {formData.hero.slides.map((slide: any, index: number) => (
+            {(formData.hero?.slides || []).map((slide: any, index: number) => (
               <div key={index} className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-4">
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="font-medium">Slide {index + 1}</h3>
@@ -147,14 +147,14 @@ export default function HomeEditor() {
         <div>
           <h2 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">Instagram Feed URLs</h2>
           <div className="space-y-4">
-            {(formData.instagram || []).map((imgUrl: string, index: number) => (
+            {(Array.isArray(formData.instagram) ? formData.instagram : (formData.instagram?.posts || [])).map((imgUrl: string, index: number) => (
               <div key={index} className="flex gap-4 items-center">
                 <div className="flex-grow flex gap-2">
                   <input
                     type="text"
                     value={imgUrl}
                     onChange={(e) => {
-                      const newInsta = [...(formData.instagram || [])];
+                      const instaObj = formData.instagram; const instaArr = Array.isArray(instaObj) ? instaObj : (instaObj?.posts || []); const newInsta = [...instaArr];
                       newInsta[index] = e.target.value;
                       setFormData({ ...formData, instagram: newInsta });
                     }}
