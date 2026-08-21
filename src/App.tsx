@@ -34,16 +34,16 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: 'login', element: <Login /> },
+      { index: true, element: <Home /> },
+      { path: 'shop', element: <Shop /> },
+      { path: 'collections', element: <Shop /> },
+      { path: 'about', element: <About /> },
+      { path: 'contact', element: <Contact /> },
+      { path: 'faq', element: <Contact /> },
+      { path: 'support', element: <Contact /> },
       {
         element: <CustomerRoute />,
         children: [
-          { index: true, element: <Home /> },
-          { path: 'shop', element: <Shop /> },
-          { path: 'collections', element: <Shop /> },
-          { path: 'about', element: <About /> },
-          { path: 'contact', element: <Contact /> },
-          { path: 'faq', element: <Contact /> },
-          { path: 'support', element: <Contact /> },
           { path: 'account', element: <Account /> },
         ],
       },

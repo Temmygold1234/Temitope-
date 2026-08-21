@@ -152,13 +152,23 @@ async function startServer() {
     }
   });
 
+  app.post("/api/cms/categories", async (req, res) => {
+    try {
+      const fs = await import("fs");
+      const filePath = path.join(process.cwd(), "src", "cms_categories.json");
+      await fs.promises.writeFile(filePath, JSON.stringify(req.body, null, 2));
+      res.json({ success: true });
+    } catch (err: any) {
+      console.error("Error saving CMS categories:", err.message);
+      res.status(500).json({ error: err.message });
+    }
+  });
+
   app.post("/api/cms/home", async (req, res) => {
     try {
-      if (process.env.NODE_ENV !== "production") {
-        const fs = await import("fs");
-        const filePath = path.join(process.cwd(), "src", "cms_home.json");
-        await fs.promises.writeFile(filePath, JSON.stringify(req.body, null, 2));
-      }
+      const fs = await import("fs");
+      const filePath = path.join(process.cwd(), "src", "cms_home.json");
+      await fs.promises.writeFile(filePath, JSON.stringify(req.body, null, 2));
       res.json({ success: true });
     } catch (err: any) {
       console.error("Error saving CMS home data:", err.message);

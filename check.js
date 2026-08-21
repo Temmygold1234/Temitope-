@@ -6,7 +6,6 @@ const puppeteer = require('puppeteer');
   page.on('pageerror', err => console.log('PAGE ERROR:', err.toString()));
   page.on('console', msg => console.log('CONSOLE LOG:', msg.type(), msg.text()));
   await page.goto('http://localhost:3000', { waitUntil: 'networkidle0' });
-  await page.goto('http://localhost:3000/admin/categories', { waitUntil: 'networkidle0' });
   await browser.close();
   process.exit(0);
 })();

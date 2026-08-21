@@ -3,6 +3,7 @@ import { createContext, useContext, useState, ReactNode, useEffect } from 'react
 import { PRODUCTS, CATEGORIES, Product } from '../data';
 import { api } from '../lib/api';
 import defaultHomeSettings from '../cms_home.json';
+import defaultCategories from '../cms_categories.json';
 
 interface CMSContextType {
   products: Product[];
@@ -30,9 +31,9 @@ export function CMSProvider({ children }: { children: ReactNode }) {
 
     const storedCategories = localStorage.getItem('cms_categories');
     if (storedCategories) {
-      setCategories(safeJSONParse(storedCategories, CATEGORIES));
+      setCategories(safeJSONParse(storedCategories, defaultCategories));
     } else {
-      setCategories(CATEGORIES);
+      setCategories(defaultCategories);
     }
 
     const storedHome = localStorage.getItem('cms_home');
@@ -88,22 +89,33 @@ export function CMSProvider({ children }: { children: ReactNode }) {
     }).catch(err => console.error('Failed to save CMS home to file:', err));
   };
 
+  const saveCategoriesToBackend = (cats: any[]) => {
+    fetch('/api/cms/categories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cats)
+    }).catch(err => console.error('Failed to save CMS categories to file:', err));
+  };
+
   const addCategory = (category: any) => {
     const newCategories = [...categories, category];
     setCategories(newCategories);
     localStorage.setItem('cms_categories', JSON.stringify(newCategories));
+    saveCategoriesToBackend(newCategories);
   };
 
   const updateCategory = (oldName: string, newCategory: any) => {
     const newCategories = categories.map(c => c.name === oldName ? newCategory : c);
     setCategories(newCategories);
     localStorage.setItem('cms_categories', JSON.stringify(newCategories));
+    saveCategoriesToBackend(newCategories);
   };
 
   const deleteCategory = (name: string) => {
     const newCategories = categories.filter(c => c.name !== name);
     setCategories(newCategories);
     localStorage.setItem('cms_categories', JSON.stringify(newCategories));
+    saveCategoriesToBackend(newCategories);
   };
 
   return (
